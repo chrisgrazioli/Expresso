@@ -75,25 +75,20 @@ menusRouter.put('/:menuId', verifyMenu, (req, res, next)=>{
   });
 });
 
-menusRouter.delete('/:menuId', verifyMenu, (req, res, next)=>{
+menusRouter.delete('/:menuId',(req, res, next)=>{
   db.get(`SELECT * FROM MenuItem WHERE MenuItem.menu_id = ${req.params.menuId}`,(error,menuItem)=>{
     if(error){
       next(error);
-    }
-    //debug
-    console.log('req.menu.id : '+req.menu.id);
-    console.log('MenuId : '+req.params.menuId);
-    console.log('MenuItem : '+ JSON.stringify(menuItem));
-    if(menuItem){
-      db.run(`DELETE FROM Menu WHERE Menu.id = ${req.params.menuId}`, function(error){
+    }else if(menuItem){
+      res.sendStatus(400);
+    }else{
+      db.run(`DELETE FROM Menu WHERE id = ${req.params.menuId}`, function(error){
         if(error){
           next(error);
         }else{
           res.sendStatus(204);
         }
       });
-    }else{
-      res.sendStatus(400);
     }
   });
 });
