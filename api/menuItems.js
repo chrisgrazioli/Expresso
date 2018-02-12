@@ -47,17 +47,19 @@ menuItemsRouter.post('/', verifyMenu, (req, res, next)=>{
         description = req.body.menuItem.description,
         inventory = req.body.menuItem.inventory,
         price = req.body.menuItem.price,
-        menuId= req.params.menuId;
-  if(!name || !description || !inventory ||!price){
+        menuId= req.params.menuId;//test for menuId in the required items
+  if(!name || !description || !inventory ||!price || !menuId){
     res.sendStatus(400);
   }else{
-    const sql='INSERT INTO MenuItem (name, description, inventory, price) VALUES ($name, $description, $inventory, $price)';
+    const sql='INSERT INTO MenuItem (name, description, inventory, price, menu_id) VALUES ($name, $description, $inventory, $price, $menuId)'; // aded menuId
 
     const values ={
       $name: name,
       $description: description,
       $inventory: inventory,
-      $price:price
+      $price:price,
+      $menuId: menuId
+      // added menuId
     };
     db.run(sql, values, function(error){
       if(error){
